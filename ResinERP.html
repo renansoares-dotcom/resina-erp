@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ResinERP — Indústria de Plásticos</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f4f2ec; color: #1a1a1a; }
+.app { display: flex; height: 100vh; background: #fff; }
+
+/* SIDEBAR */
+.sidebar { width: 220px; background: #501313; display: flex; flex-direction: column; flex-shrink: 0; }
+.sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.logo-icon { width: 36px; height: 36px; background: #E24B4A; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+.logo-icon i { color: #fff; font-size: 20px; }
+.logo-name { color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; }
+.logo-sub { color: rgba(255,255,255,0.45); font-size: 10px; margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
+.nav { padding: 12px 0; flex: 1; }
+.nav-section { padding: 10px 16px 4px; color: rgba(255,255,255,0.3); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; cursor: pointer; color: rgba(255,255,255,0.6); font-size: 13px; transition: all 0.15s; border-left: 2px solid transparent; user-select: none; }
+.nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.nav-item.active { background: rgba(226,75,74,0.22); color: #fff; border-left-color: #E24B4A; }
+.nav-item i { font-size: 16px; width: 18px; }
+.sidebar-footer { padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.1); }
+.user-pill { display: flex; align-items: center; gap: 8px; }
+.avatar { width: 28px; height: 28px; border-radius: 50%; background: #A32D2D; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 600; }
+.user-info p { color: rgba(255,255,255,0.8); font-size: 12px; }
+.user-info span { color: rgba(255,255,255,0.4); font-size: 10px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e2d8; background: #fff; }
+.page-title { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
+.badge { background: #FCEBEB; color: #791F1F; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.topbar-btn { background: transparent; border: 1px solid #ddd; border-radius: 8px; padding: 6px 10px; cursor: pointer; color: #666; font-size: 14px; }
+.topbar-btn:hover { background: #f5f5f5; }
+
+/* TABS */
+.tabs { display: flex; border-bottom: 1px solid #e5e2d8; padding: 0 24px; background: #fff; }
+.tab { padding: 12px 18px; font-size: 13px; cursor: pointer; color: #888; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; white-space: nowrap; user-select: none; }
+.tab:hover { color: #333; }
+.tab.active { color: #A32D2D; border-bottom-color: #E24B4A; font-weight: 600; }
+.tab i { font-size: 14px; vertical-align: -2px; margin-right: 5px; }
+
+/* CONTENT */
+.content { flex: 1; overflow-y: auto; padding: 20px 24px; background: #f4f2ec; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* STATS */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: #fff; border: 1px solid #e5e2d8; border-radius: 10px; padding: 14px 16px; }
+.stat-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.stat-value { font-size: 22px; font-weight: 600; color: #1a1a1a; }
+.stat-sub { font-size: 11px; color: #888; margin-top: 3px; }
+.stat-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; }
+
+/* CARD */
+.card { background: #fff; border: 1px solid #e5e2d8; border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+.card-header { padding: 14px 18px; border-bottom: 1px solid #e5e2d8; display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 13px; font-weight: 600; color: #1a1a1a; display: flex; align-items: center; gap: 8px; }
+.card-title i { color: #E24B4A; font-size: 16px; }
+.card-body { padding: 18px; }
+
+/* TABLE */
+.tbl { width: 100%; font-size: 13px; border-collapse: collapse; }
+.tbl th { text-align: left; padding: 8px 14px; color: #888; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e5e2d8; background: #faf9f6; }
+.tbl td { padding: 10px 14px; border-bottom: 1px solid #f0ede6; color: #1a1a1a; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: #faf9f6; }
+.status-badge { display: inline-flex; align-items: center; font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
+.status-ok   { background: #EAF3DE; color: #27500A; }
+.status-warn { background: #FAEEDA; color: #633806; }
+.status-err  { background: #FCEBEB; color: #791F1F; }
+.status-pend { background: #E6F1FB; color: #0C447C; }
+
+/* FORM */
+.form-grid   { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.form-row { display: flex; flex-direction: column; gap: 5px; }
+.form-row label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+.form-row input,
+.form-row select,
+.form-row textarea { background: #f7f6f2; border: 1px solid #ddd; border-radius: 8px; padding: 8px 10px; font-size: 13px; color: #1a1a1a; font-family: inherit; transition: border 0.15s; }
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus { outline: none; border-color: #E24B4A; background: #fff; }
+.form-row textarea { resize: vertical; min-height: 64px; }
+
+/* COMPOSIÇÃO */
+.comp-row { display: grid; grid-template-columns: 2fr 1fr 1fr 72px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0ede6; }
+.comp-row:last-child { border-bottom: none; }
+.comp-header { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+
+/* RESULTADO */
+.resultado-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.result-box { border: 1px solid #ddd; border-radius: 10px; padding: 16px; }
+.result-box.produto { border-color: #639922; background: #EAF3DE; }
+.result-box.sobra   { border-color: #BA7517; background: #FAEEDA; }
+.result-box-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.result-box.produto .result-box-title { color: #27500A; }
+.result-box.sobra   .result-box-title { color: #633806; }
+.result-item { display: flex; justify-content: space-between; padding: 5px 0; font-size: 13px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.result-item:last-child { border-bottom: none; }
+.result-item-label { color: #666; }
+.result-item-val { font-weight: 600; color: #1a1a1a; }
+
+/* ESTOQUE */
+.estoque-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 8px; }
+.estoque-item { background: #fff; border: 1px solid #e5e2d8; border-radius: 10px; padding: 14px; }
+.estoque-nome { font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 2px; }
+.estoque-tipo { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.estoque-bar-wrap { background: #f0ede6; border-radius: 4px; height: 5px; margin-bottom: 6px; }
+.estoque-bar { height: 5px; border-radius: 4px; }
+.estoque-qt { font-size: 12px; color: #888; display: flex; justify-content: space-between; }
+
+/* PROCESS STEPS */
+.steps { display: flex; margin-bottom: 20px; }
+.step { display: flex; align-items: center; gap: 7px; padding: 8px 16px; font-size: 12px; background: #fff; border: 1px solid #ddd; cursor: pointer; color: #888; transition: all 0.15s; user-select: none; border-right: none; }
+.step:first-child { border-radius: 8px 0 0 8px; }
+.step:last-child  { border-radius: 0 8px 8px 0; border-right: 1px solid #ddd; }
+.step.active { background: #FCEBEB; color: #791F1F; border-color: #E24B4A; z-index: 1; font-weight: 600; }
+.step-num { width: 20px; height: 20px; border-radius: 50%; background: #eee; color: #888; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.step.active .step-num { background: #E24B4A; color: #fff; }
+
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; border: 1px solid; transition: all 0.15s; font-family: inherit; font-weight: 500; }
+.btn-primary { background: #A32D2D; color: #fff; border-color: #A32D2D; }
+.btn-primary:hover { background: #791F1F; border-color: #791F1F; }
+.btn-ghost { background: transparent; color: #666; border-color: #ddd; }
+.btn-ghost:hover { background: #f5f5f5; color: #333; }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+.btn-add { background: #FCEBEB; color: #791F1F; border-color: #F7C1C1; }
+.btn-add:hover { background: #F7C1C1; }
+.btn-danger { background: transparent; color: #E24B4A; border-color: transparent; }
+.btn-danger:hover { background: #FCEBEB; }
+
+/* UTILS */
+.sep { height: 1px; background: #e5e2d8; margin: 16px 0; }
+.text-muted { color: #888; font-size: 12px; }
+.fw600 { font-weight: 600; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.mt12 { margin-top: 12px; }
+.section-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-bottom: 10px; margin-top: 6px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: #e5e2d8; }
+.comp-select { font-size:13px; padding:7px 10px; background:#f7f6f2; border:1px solid #ddd; border-radius:8px; color:#1a1a1a; width:100%; font-family:inherit; }
+.comp-input  { font-size:13px; padding:7px 10px; background:#f7f6f2; border:1px solid #ddd; border-radius:8px; color:#1a1a1a; width:100%; font-family:inherit; }
+.comp-select:focus, .comp-input:focus { outline:none; border-color:#E24B4A; background:#fff; }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="ti ti-hexagons"></i></div>
+      <div class="logo-name">ResinERP</div>
+      <div class="logo-sub">Indústria de Plásticos</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">Principal</div>
+      <div class="nav-item" onclick="switchModule('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="nav-section">Suprimentos</div>
+      <div class="nav-item active" id="nav-compras"  onclick="switchModule('compras')"><i class="ti ti-shopping-cart"></i> Compras</div>
+      <div class="nav-item"        id="nav-estoque"  onclick="switchModule('estoque')"><i class="ti ti-package"></i> Estoque</div>
+      <div class="nav-section">Produção</div>
+      <div class="nav-item"        id="nav-processo" onclick="switchModule('processo')"><i class="ti ti-settings-2"></i> Processo</div>
+      <div class="nav-item"><i class="ti ti-cube"></i> Produtos</div>
+      <div class="nav-section">Relatórios</div>
+      <div class="nav-item"><i class="ti ti-chart-bar"></i> Análises</div>
+      <div class="nav-item"><i class="ti ti-file-text"></i> Relatórios</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-pill">
+        <div class="avatar">OP</div>
+        <div class="user-info"><p>Operador</p><span>Produção</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title" id="page-title">Controle de Compras</div>
+      <div class="topbar-actions">
+        <span class="badge" id="page-badge">Insumos</span>
+        <button class="topbar-btn"><i class="ti ti-bell"></i></button>
+        <button class="topbar-btn"><i class="ti ti-settings"></i></button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" id="tab-compras"  onclick="switchModule('compras')"><i class="ti ti-shopping-cart"></i>Compras</div>
+      <div class="tab"        id="tab-estoque"  onclick="switchModule('estoque')"><i class="ti ti-package"></i>Estoque</div>
+      <div class="tab"        id="tab-processo" onclick="switchModule('processo')"><i class="ti ti-settings-2"></i>Processo</div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===== COMPRAS ===== -->
+      <div class="panel active" id="panel-compras">
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-label">Pedidos no Mês</div>
+            <div class="stat-value">24</div>
+            <div class="stat-sub"><span class="stat-dot" style="background:#639922"></span>8 entregues</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Valor Total</div>
+            <div class="stat-value">R$ 148k</div>
+            <div class="stat-sub"><span class="stat-dot" style="background:#BA7517"></span>R$ 42k pendente</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Fornecedores Ativos</div>
+            <div class="stat-value">12</div>
+            <div class="stat-sub"><span class="stat-dot" style="background:#378ADD"></span>3 novos este mês</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Itens em Alerta</div>
+            <div class="stat-value" style="color:#A32D2D">3</div>
+            <div class="stat-sub"><span class="stat-dot" style="background:#E24B4A"></span>Estoque mínimo</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="ti ti-plus-circle"></i>Nova Ordem de Compra</div>
+          </div>
+          <div class="card-body">
+            <div class="form-grid" style="margin-bottom:14px">
+              <div class="form-row">
+                <label>Fornecedor</label>
+                <select>
+                  <option>Petroquímica Ipiranga</option>
+                  <option>Braskem SA</option>
+                  <option>Quattor Petroquímica</option>
+                  <option>Polietilenos União</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>Tipo de Insumo</label>
+                <select>
+                  <option>Resina base (PEBD / PEAD / PP)</option>
+                  <option>Aditivo — Antblock</option>
+                  <option>Aditivo — Deslizante (Slip)</option>
+                  <option>Aditivo — Antiestático</option>
+                  <option>Aditivo — UV</option>
+                  <option>Masterbatch / Pigmento</option>
+                  <option>Reprocessado / Reciclado</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>Produto / Código</label>
+                <input type="text" placeholder="Ex: PEBD GP-101" />
+              </div>
+              <div class="form-row">
+                <label>Nota Fiscal Nº</label>
+                <input type="text" placeholder="000000" />
+              </div>
+            </div>
+            <div class="form-grid-3" style="margin-bottom:14px">
+              <div class="form-row">
+                <label>Quantidade (kg)</label>
+                <input type="number" value="1000" />
+              </div>
+              <div class="form-row">
+                <label>Preço / kg (R$)</label>
+                <input type="number" value="8.50" step="0.01" />
+              </div>
+              <div class="form-row">
+                <label>Data de Entrega</label>
+                <input type="date" value="2026-06-10" />
+              </div>
+            </div>
+            <div class="form-grid" style="margin-bottom:14px">
+              <div class="form-row">
+                <label>Lote / Certificado</label>
+                <input type="text" placeholder="Nº do lote do fabricante" />
+              </div>
+              <div class="form-row">
+                <label>Local de Armazenagem</label>
+                <select>
+                  <option>Almoxarifado A — Resinas</option>
+                  <option>Almoxarifado B — Aditivos</option>
+                  <option>Almoxarifado C — Embalagens</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row" style="margin-bottom:18px">
+              <label>Observações</label>
+              <textarea placeholder="Condições especiais, transporte, laudos exigidos..."></textarea>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+              <button class="btn btn-ghost">Cancelar</button>
+              <button class="btn btn-primary"><i class="ti ti-check"></i>Registrar Compra</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="ti ti-list"></i>Ordens de Compra Recentes</div>
+            <button class="btn btn-ghost btn-sm"><i class="ti ti-filter"></i> Filtrar</button>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table class="tbl">
+              <thead><tr>
+                <th>OC Nº</th><th>Insumo</th><th>Fornecedor</th><th>Qtd (kg)</th><th>Valor</th><th>Entrega</th><th>Status</th>
+              </tr></thead>
+              <tbody>
+                <tr><td class="fw600">OC-0241</td><td>PEBD GP-101</td><td>Braskem SA</td><td>5.000</td><td>R$ 42.500</td><td>05/06/26</td><td><span class="status-badge status-pend">Aguardando</span></td></tr>
+                <tr><td class="fw600">OC-0240</td><td>Antblock MB-AB20</td><td>Ampacet</td><td>200</td><td>R$ 3.800</td><td>03/06/26</td><td><span class="status-badge status-ok">Recebido</span></td></tr>
+                <tr><td class="fw600">OC-0239</td><td>Deslizante SL-10</td><td>Ampacet</td><td>150</td><td>R$ 2.925</td><td>03/06/26</td><td><span class="status-badge status-ok">Recebido</span></td></tr>
+                <tr><td class="fw600">OC-0238</td><td>PP Copolímero</td><td>Braskem SA</td><td>3.000</td><td>R$ 28.500</td><td>01/06/26</td><td><span class="status-badge status-warn">Em trânsito</span></td></tr>
+                <tr><td class="fw600">OC-0237</td><td>Masterbatch Branco</td><td>Clariant</td><td>500</td><td>R$ 8.750</td><td>28/05/26</td><td><span class="status-badge status-ok">Recebido</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ESTOQUE ===== -->
+      <div class="panel" id="panel-estoque">
+        <div class="stats">
+          <div class="stat-card"><div class="stat-label">Total em Estoque</div><div class="stat-value">18,4 t</div><div class="stat-sub">toneladas de insumo</div></div>
+          <div class="stat-card"><div class="stat-label">Itens Cadastrados</div><div class="stat-value">31</div><div class="stat-sub">matérias-primas</div></div>
+          <div class="stat-card"><div class="stat-label">Valor em Estoque</div><div class="stat-value">R$ 214k</div><div class="stat-sub">custo médio</div></div>
+          <div class="stat-card"><div class="stat-label">Abaixo do Mínimo</div><div class="stat-value" style="color:#A32D2D">3</div><div class="stat-sub">requer reposição</div></div>
+        </div>
+
+        <div class="section-label">Resinas Base</div>
+        <div class="estoque-grid">
+          <div class="estoque-item">
+            <div class="estoque-nome">PEBD GP-101</div>
+            <div class="estoque-tipo">Resina Base · Lote 2024-A</div>
+            <div class="estoque-bar-wrap"><div class="estoque-bar" style="width:72%;background:#639922"></div></div>
+            <div class="estoque-qt"><span>7.200 kg</span><span style="color:#27500A;font-weight:600">OK</span></div>
+          </div>
+          <div class="estoque-item">
+            <div class="estoque-nome">PP Copolímero R200</div>
+            <div class="estoque-tipo">Resina Base · Lote 2024-B</div>
+            <div class="estoque-bar-wrap"><div class="estoque-bar" style="width:38%;background:#BA7517"></div></div>
+            <div class="estoque-qt"><span>3.800 kg</span><span style="color:#633806;font-weight:600">Atenção</span></div>
+          </div>
+          <div class="estoque-item">
+            <div class="estoque-nome">PEAD HD50</div>
+            <div class="estoque-tipo">Resina Base · Lote 2024-C</div>
+            <div class="estoque-bar-wrap"><div class="estoque-bar" style="width:15%;background:#E24B4A"></div></div>
+            <div class="estoque-qt"><span>1.500 kg</span><span style="color:#791F1F;font-weight:600">Crítico</span></div>
+          </div>
+        </div>
+
+        <div class="section-label" style="margin-top:18px">Aditivos e Masterbatch</div>
+        <div class="estoque-grid">
+          <div class="estoque-item">
+            <div class="estoque-nome">Antblock MB-AB20</div>
+            <div class="estoque-tipo">Aditivo · Ampacet</div>
+            <div class="estoque-bar-wrap"><div class="estoque-bar" style="width:60%;background:#639922"></div></div>
+            <div class="estoque-qt"><span>180 kg</span><span style="color:#27500A;font-weight:600">OK</span></div>
+          </div>
+          <div class="estoque-item">
+            <div class="estoque-nome">Deslizante SL-10</div>
+            <div class="estoque-tipo">Aditivo · Ampacet</div>
+            <div class="estoque-bar-wrap"><div class="estoque-bar" style="width:45%;background:#BA7517"></div></div>
+            <div class="estoque-qt"><span>130 kg</span><span style="color:#633806;font-weight:600">Atenção</span></div>
+          </div>
+          <div class="estoque-item">
+            <div class="estoque-nome">Masterbatch Branco</div>
+            <div class="estoque-tipo">Pigmento · Clariant</div>
+            <div class="estoque-bar-wrap"><div class="estoque-bar" style="width:80%;background:#639922"></div></div>
+            <div class="estoque-qt"><span>480 kg</span><span style="color:#27500A;font-weight:600">OK</span></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="card-header">
+            <div class="card-title"><i class="ti ti-history"></i>Movimentações Recentes</div>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table class="tbl">
+              <thead><tr><th>Data</th><th>Insumo</th><th>Tipo</th><th>Qtd (kg)</th><th>Origem</th><th>Saldo após</th></tr></thead>
+              <tbody>
+                <tr><td>01/06/26</td><td>Antblock MB-AB20</td><td><span class="status-badge status-ok">Entrada</span></td><td>+200</td><td>OC-0240</td><td>180</td></tr>
+                <tr><td>01/06/26</td><td>Deslizante SL-10</td><td><span class="status-badge status-ok">Entrada</span></td><td>+150</td><td>OC-0239</td><td>130</td></tr>
+                <tr><td>31/05/26</td><td>PEBD GP-101</td><td><span class="status-badge status-err">Consumo</span></td><td>-800</td><td>Processo #P118</td><td>7.200</td></tr>
+                <tr><td>31/05/26</td><td>Masterbatch Branco</td><td><span class="status-badge status-err">Consumo</span></td><td>-80</td><td>Processo #P118</td><td>480</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PROCESSO ===== -->
+      <div class="panel" id="panel-processo">
+        <div class="steps">
+          <div class="step active" id="stp-1" onclick="goStep(1)"><div class="step-num">1</div>Formulação</div>
+          <div class="step"        id="stp-2" onclick="goStep(2)"><div class="step-num">2</div>Composição</div>
+          <div class="step"        id="stp-3" onclick="goStep(3)"><div class="step-num">3</div>Produção</div>
+          <div class="step"        id="stp-4" onclick="goStep(4)"><div class="step-num">4</div>Resultado</div>
+        </div>
+
+        <!-- Step 1 -->
+        <div id="step-1">
+          <div class="card">
+            <div class="card-header"><div class="card-title"><i class="ti ti-clipboard-list"></i>Ordem de Processo</div></div>
+            <div class="card-body">
+              <div class="form-grid" style="margin-bottom:14px">
+                <div class="form-row"><label>Nº da Ordem</label><input type="text" value="OP-0119" /></div>
+                <div class="form-row">
+                  <label>Produto a Produzir</label>
+                  <select><option>Filme Stretch 25µ</option><option>Filme Shrink 40µ</option><option>Sacola PEBD 60x90</option><option>Tubete PP 32mm</option></select>
+                </div>
+                <div class="form-row">
+                  <label>Extrusora</label>
+                  <select><option>EXT-01 (Blown Film)</option><option>EXT-02 (Flat Film)</option><option>EXT-03 (Tubular)</option></select>
+                </div>
+                <div class="form-row">
+                  <label>Turno</label>
+                  <select><option>1º Turno (06h–14h)</option><option>2º Turno (14h–22h)</option><option>3º Turno (22h–06h)</option></select>
+                </div>
+                <div class="form-row"><label>Meta de Produção (kg)</label><input type="number" value="800" /></div>
+                <div class="form-row"><label>Espessura alvo (µm)</label><input type="number" value="25" /></div>
+              </div>
+              <div style="display:flex;justify-content:flex-end">
+                <button class="btn btn-primary" onclick="goStep(2)"><i class="ti ti-arrow-right"></i>Próximo: Composição</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div id="step-2" style="display:none">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ti ti-flask"></i>Composição da Resina</div>
+              <span class="text-muted">Total deve somar 100%</span>
+            </div>
+            <div class="card-body">
+              <div class="comp-row">
+                <span class="comp-header">Componente</span>
+                <span class="comp-header">Estoque disp.</span>
+                <span class="comp-header">% na mistura</span>
+                <span></span>
+              </div>
+              <div id="comp-list">
+                <div class="comp-row">
+                  <select class="comp-select">
+                    <option>PEBD GP-101</option><option>PP Copolímero R200</option><option>PEAD HD50</option>
+                  </select>
+                  <span style="font-size:12px;color:#888">7.200 kg</span>
+                  <input type="number" class="comp-input" value="85" min="0" max="100" onchange="updateTotal()" />
+                  <button class="btn btn-danger btn-sm" onclick="removeComp(this)"><i class="ti ti-trash"></i></button>
+                </div>
+                <div class="comp-row">
+                  <select class="comp-select">
+                    <option>Antblock MB-AB20</option><option>Deslizante SL-10</option><option>Masterbatch Branco</option><option>UV Estabilizador</option>
+                  </select>
+                  <span style="font-size:12px;color:#888">180 kg</span>
+                  <input type="number" class="comp-input" value="10" min="0" max="100" onchange="updateTotal()" />
+                  <button class="btn btn-danger btn-sm" onclick="removeComp(this)"><i class="ti ti-trash"></i></button>
+                </div>
+                <div class="comp-row">
+                  <select class="comp-select">
+                    <option>Deslizante SL-10</option><option>Antblock MB-AB20</option><option>Masterbatch Branco</option><option>UV Estabilizador</option>
+                  </select>
+                  <span style="font-size:12px;color:#888">130 kg</span>
+                  <input type="number" class="comp-input" value="5" min="0" max="100" onchange="updateTotal()" />
+                  <button class="btn btn-danger btn-sm" onclick="removeComp(this)"><i class="ti ti-trash"></i></button>
+                </div>
+              </div>
+              <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between">
+                <button class="btn btn-add btn-sm" onclick="addComp()"><i class="ti ti-plus"></i>Adicionar componente</button>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="font-size:12px;color:#888">Total:</span>
+                  <span id="total-pct" style="font-size:15px;font-weight:700;color:#27500A">100%</span>
+                </div>
+              </div>
+              <div class="sep"></div>
+              <div class="form-grid-3">
+                <div class="form-row"><label>Carga total (kg)</label><input type="number" value="800" /></div>
+                <div class="form-row"><label>Temperatura zona 1 (°C)</label><input type="number" value="180" /></div>
+                <div class="form-row"><label>Temperatura zona 2 (°C)</label><input type="number" value="195" /></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:16px">
+                <button class="btn btn-ghost" onclick="goStep(1)"><i class="ti ti-arrow-left"></i>Voltar</button>
+                <button class="btn btn-primary" onclick="goStep(3)"><i class="ti ti-arrow-right"></i>Próximo: Produção</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div id="step-3" style="display:none">
+          <div class="card">
+            <div class="card-header"><div class="card-title"><i class="ti ti-settings-2"></i>Dados de Produção</div></div>
+            <div class="card-body">
+              <div class="form-grid" style="margin-bottom:14px">
+                <div class="form-row"><label>Início da Produção</label><input type="datetime-local" value="2026-06-01T06:00" /></div>
+                <div class="form-row"><label>Fim da Produção</label><input type="datetime-local" value="2026-06-01T14:00" /></div>
+                <div class="form-row"><label>Operador Responsável</label><input type="text" value="Carlos Mendes" /></div>
+                <div class="form-row"><label>Velocidade linha (m/min)</label><input type="number" value="45" /></div>
+              </div>
+              <div class="form-grid-3">
+                <div class="form-row"><label>Produto Acabado (kg)</label><input type="number" id="prod-acabado" value="736" onchange="calcSobras()" /></div>
+                <div class="form-row"><label>Aparas (kg)</label><input type="number" id="prod-aparas" value="40" onchange="calcSobras()" /></div>
+                <div class="form-row"><label>Borra / Purga (kg)</label><input type="number" id="prod-borra" value="16" onchange="calcSobras()" /></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:16px">
+                <button class="btn btn-ghost" onclick="goStep(2)"><i class="ti ti-arrow-left"></i>Voltar</button>
+                <button class="btn btn-primary" onclick="goStep(4)"><i class="ti ti-arrow-right"></i>Ver Resultado</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div id="step-4" style="display:none">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ti ti-report-analytics"></i>Resultado do Processo OP-0119</div>
+              <span class="status-badge status-ok"><i class="ti ti-check" style="font-size:11px;margin-right:3px"></i>Finalizado</span>
+            </div>
+            <div class="card-body">
+              <div class="resultado-grid">
+                <div class="result-box produto">
+                  <div class="result-box-title"><i class="ti ti-cube" style="font-size:14px"></i>Produto Acabado</div>
+                  <div class="result-item"><span class="result-item-label">Item produzido</span><span class="result-item-val">Filme Stretch 25µ</span></div>
+                  <div class="result-item"><span class="result-item-label">Quantidade (kg)</span><span class="result-item-val" id="res-acabado">736 kg</span></div>
+                  <div class="result-item"><span class="result-item-label">Aproveitamento</span><span class="result-item-val" id="res-aproveit">92,0%</span></div>
+                  <div class="result-item"><span class="result-item-label">Destino</span><span class="result-item-val">Estoque PF / Expedição</span></div>
+                </div>
+                <div class="result-box sobra">
+                  <div class="result-box-title"><i class="ti ti-recycle" style="font-size:14px"></i>Sobras e Rejeitos</div>
+                  <div class="result-item"><span class="result-item-label">Aparas (kg)</span><span class="result-item-val" id="res-aparas">40 kg</span></div>
+                  <div class="result-item"><span class="result-item-label">Borra / Purga (kg)</span><span class="result-item-val" id="res-borra">16 kg</span></div>
+                  <div class="result-item"><span class="result-item-label">Total sobras</span><span class="result-item-val" id="res-total-sob">56 kg</span></div>
+                  <div class="result-item"><span class="result-item-label">Destino aparas</span><span class="result-item-val">Reprocessamento</span></div>
+                  <div class="result-item"><span class="result-item-label">Destino borra</span><span class="result-item-val">Descarte / Laudo</span></div>
+                </div>
+              </div>
+              <div class="sep"></div>
+              <div class="section-label">Baixa de Estoque Gerada</div>
+              <table class="tbl" style="margin-bottom:16px">
+                <thead><tr><th>Insumo</th><th>Consumido (kg)</th><th>Saldo Anterior</th><th>Saldo Atual</th></tr></thead>
+                <tbody>
+                  <tr><td>PEBD GP-101</td><td>680</td><td>7.200</td><td>6.520</td></tr>
+                  <tr><td>Antblock MB-AB20</td><td>80</td><td>180</td><td>100</td></tr>
+                  <tr><td>Deslizante SL-10</td><td>40</td><td>130</td><td>90</td></tr>
+                </tbody>
+              </table>
+              <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button class="btn btn-ghost" onclick="goStep(3)"><i class="ti ti-arrow-left"></i>Editar</button>
+                <button class="btn btn-primary"><i class="ti ti-check"></i>Confirmar e Registrar Baixa</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+function switchModule(mod) {
+  ['compras','estoque','processo'].forEach(m => {
+    const p = document.getElementById('panel-'+m);
+    const t = document.getElementById('tab-'+m);
+    const n = document.getElementById('nav-'+m);
+    if (p) p.classList.toggle('active', m===mod);
+    if (t) t.classList.toggle('active', m===mod);
+    if (n) n.classList.toggle('active', m===mod);
+  });
+  const titles = {compras:'Controle de Compras', estoque:'Gestão de Estoque', processo:'Ordens de Processo'};
+  const badges  = {compras:'Insumos', estoque:'Matéria-Prima', processo:'Extrusão'};
+  document.getElementById('page-title').textContent = titles[mod] || mod;
+  document.getElementById('page-badge').textContent = badges[mod]  || mod;
+}
+
+function goStep(n) {
+  [1,2,3,4].forEach(i => {
+    const s = document.getElementById('step-'+i);
+    const b = document.getElementById('stp-'+i);
+    if (s) s.style.display = i===n ? 'block' : 'none';
+    if (b) b.classList.toggle('active', i===n);
+  });
+}
+
+function updateTotal() {
+  const inputs = document.querySelectorAll('#comp-list input[type=number]');
+  let t = 0;
+  inputs.forEach(i => t += parseFloat(i.value)||0);
+  const el = document.getElementById('total-pct');
+  el.textContent = t + '%';
+  el.style.color = t===100 ? '#27500A' : t>100 ? '#A32D2D' : '#633806';
+}
+
+function addComp() {
+  const list = document.getElementById('comp-list');
+  const div = document.createElement('div');
+  div.className = 'comp-row';
+  div.innerHTML = `
+    <select class="comp-select">
+      <option>Antblock MB-AB20</option><option>Deslizante SL-10</option>
+      <option>Masterbatch Branco</option><option>UV Estabilizador</option>
+      <option>Antiestático AE-5</option><option>Reprocessado RP-01</option>
+    </select>
+    <span style="font-size:12px;color:#888">—</span>
+    <input type="number" class="comp-input" value="0" min="0" max="100" onchange="updateTotal()" />
+    <button class="btn btn-danger btn-sm" onclick="removeComp(this)"><i class="ti ti-trash"></i></button>`;
+  list.appendChild(div);
+}
+
+function removeComp(btn) {
+  btn.closest('.comp-row').remove();
+  updateTotal();
+}
+
+function calcSobras() {
+  const ac = parseFloat(document.getElementById('prod-acabado').value)||0;
+  const ap = parseFloat(document.getElementById('prod-aparas').value)||0;
+  const bo = parseFloat(document.getElementById('prod-borra').value)||0;
+  const total = ac + ap + bo;
+  const aprov = total > 0 ? ((ac/total)*100).toFixed(1) : '0.0';
+  document.getElementById('res-acabado').textContent   = ac + ' kg';
+  document.getElementById('res-aparas').textContent    = ap + ' kg';
+  document.getElementById('res-borra').textContent     = bo + ' kg';
+  document.getElementById('res-total-sob').textContent = (ap+bo) + ' kg';
+  document.getElementById('res-aproveit').textContent  = aprov.replace('.',',') + '%';
+}
+</script>
+</body>
+</html>
