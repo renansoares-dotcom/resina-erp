@@ -832,6 +832,133 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f0;color:#1a2a1
 </div>
 
 <script>
+// ============================================================
+// SUPABASE CONFIG
+// ============================================================
+var SUPA_URL = 'https://spgrbldpuxetcszfdkwg.supabase.co';
+var SUPA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwZ3JibGRwdXhldGNzemZka3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNjQyMTksImV4cCI6MjA5NjY0MDIxOX0.8Wexu_1nAJR3QcBPRlHLEF1iF47Q2w9l3ASzLGD6_ts';
+
+async function sbFetch(method, table, body, params) {
+  var url = SUPA_URL + '/rest/v1/' + table;
+  if (params) url += '?' + params;
+  var opts = {
+    method: method,
+    headers: {
+      'apikey':        SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type':  'application/json',
+      'Prefer':        method === 'POST' ? 'return=representation' : ''
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  var res = await fetch(url, opts);
+  if (!res.ok) {
+    var err = await res.text();
+    console.error('Supabase error', res.status, err);
+    return null;
+  }
+  var text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+// Load all data from Supabase on startup
+async function carregarDados() {
+  showToast('Carregando dados...', 'info');
+  try {
+    var [comps, ests, procs] = await Promise.all([
+      sbFetch('GET', 'compras',  null, 'order=created_at.asc'),
+      sbFetch('GET', 'estoques', null, 'order=created_at.asc'),
+      sbFetch('GET', 'processos',null, 'order=created_at.asc')
+    ]);
+
+    if (comps)  OCS       = comps.map(dbToOC);
+    if (ests)   ESTS      = ests.map(dbToEst);
+    if (procs)  PROCESSOS = procs.map(dbToProc);
+
+    // Sync sequences
+    OCS.forEach(function(o){
+      var n = parseInt((o.id||'').replace(/\D/g,''));
+      if(n >= ocN) ocN = n+1;
+    });
+    ESTS.forEach(function(e){
+      var n = parseInt((e.id||'').replace(/\D/g,''));
+      if(n >= estN) estN = n+1;
+    });
+    PROCESSOS.forEach(function(p){
+      var n = parseInt((p.op||'').replace(/\D/g,''));
+      if(n >= opN) opN = n+1;
+    });
+
+    showToast('Dados carregados!', 'ok');
+  } catch(e) {
+    console.error(e);
+    showToast('Erro ao carregar dados', 'err');
+  }
+  navTo('compras');
+}
+
+// ── DB mappers ────────────────────────────────────────────────
+function dbToOC(r) {
+  return {id:r.id, nf:r.nf, forn:r.forn, cnpj:r.cnpj,
+    itens:r.itens||[], qtdTotal:r.qtd_total, vTotal:r.v_total,
+    vFrete:r.v_frete||0, data:r.data, lote:r.lote, almo:r.almo,
+    obs:r.obs, estId:r.est_id, status:r.status,
+    tipoLanc:r.tipo_lanc, ocVinculada:r.oc_vinculada};
+}
+function ocToDB(o) {
+  return {id:o.id, nf:o.nf, forn:o.forn, cnpj:o.cnpj||null,
+    itens:o.itens||[], qtd_total:o.qtdTotal||0, v_total:o.vTotal||0,
+    v_frete:o.vFrete||0, data:o.data||null, lote:o.lote||null,
+    almo:o.almo||null, obs:o.obs||null, est_id:o.estId||null,
+    status:o.status||null, tipo_lanc:o.tipoLanc||null,
+    oc_vinculada:o.ocVinculada||null};
+}
+
+function dbToEst(r) {
+  return {id:r.id, nome:r.nome, insumo:r.insumo, tipo:r.tipo,
+    ocId:r.oc_id, qtdI:r.qtd_inicial, saldo:r.saldo,
+    lote:r.lote, forn:r.forn, almo:r.almo,
+    status:r.status, hist:r.hist||[]};
+}
+function estToDB(e) {
+  return {id:e.id, nome:e.nome, insumo:e.insumo, tipo:e.tipo,
+    oc_id:e.ocId||null, qtd_inicial:e.qtdI, saldo:e.saldo,
+    lote:e.lote||null, forn:e.forn||null, almo:e.almo||null,
+    status:e.status, hist:e.hist||[]};
+}
+
+function dbToProc(r) {
+  return {op:r.op, produto:r.produto, estId:r.est_id, estNome:r.est_nome,
+    insumo:r.insumo, extrusora:r.extrusora, turno:r.turno,
+    operador:r.operador, velocidade:r.velocidade, espessura:r.espessura,
+    largura:r.largura, inicio:r.inicio, fim:r.fim,
+    acabado:r.acabado, aparas:r.aparas, borra:r.borra,
+    consumo:r.consumo, aprov:r.aprov,
+    saldoAnt:r.saldo_ant, saldoAp:r.saldo_ap, data:r.data};
+}
+function procToDB(p) {
+  return {op:p.op, produto:p.produto, est_id:p.estId, est_nome:p.estNome,
+    insumo:p.insumo, extrusora:p.extrusora, turno:p.turno,
+    operador:p.operador||null, velocidade:p.velocidade||null,
+    espessura:p.espessura||null, largura:p.largura||null,
+    inicio:p.inicio||null, fim:p.fim||null,
+    acabado:p.acabado, aparas:p.aparas, borra:p.borra,
+    consumo:p.consumo, aprov:p.aprov,
+    saldo_ant:p.saldoAnt, saldo_ap:p.saldoAp, data:p.data};
+}
+
+// ── Toast notification ────────────────────────────────────────
+function showToast(msg, tipo) {
+  var el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.background = tipo==='ok'?'#2E6B30':tipo==='err'?'#c0392b':'#1276a0';
+  el.style.display = 'flex';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function(){ el.style.display='none'; }, 3000);
+}
+
+
 
 var OCS  = [];
 var ESTS = [];
@@ -1120,8 +1247,11 @@ function registrarCompra() {
     estId: estId, status: 'Recebido'
   });
 
-  var msg = 'Compra registrada! OC: '+ocId+' | NF: '+nfeData.nNF+' | Estoque: '+estId+' | Qtd: '+fmtN(qtdTotal)+' kg';
-  alert(msg);
+  var rcOC  = OCS[OCS.length-1];
+  var rcEst = ESTS.find(function(x){ return x.id===estId; });
+  sbFetch('POST','compras',  ocToDB(rcOC)).catch(function(e){ console.error(e); });
+  if (rcEst) sbFetch('POST','estoques', estToDB(rcEst)).catch(function(e){ console.error(e); });
+  showToast('Compra NF-e registrada: '+ocId, 'ok');
   limparNFe();
   renderCompras();
   updStatsC();
@@ -1149,7 +1279,11 @@ function registrarManual() {
     qtdTotal:qtd, vTotal:qtd*preco, data:gv('cm-data'),
     lote:gv('cm-lote'), almo:gv('cm-almo'), obs:'', estId:estId, status:'Recebido'
   });
-  alert('Registrado! OC: '+ocId+' | Estoque: '+estId);
+  var mOC  = OCS[OCS.length-1];
+  var mEst = ESTS.find(function(x){ return x.id===estId; });
+  sbFetch('POST','compras',  ocToDB(mOC)).catch(function(e){ console.error(e); });
+  if (mEst) sbFetch('POST','estoques', estToDB(mEst)).catch(function(e){ console.error(e); });
+  showToast('Registrado: '+ocId, 'ok');
   ['cm-forn','cm-prod','cm-nf','cm-qtd','cm-preco','cm-lote'].forEach(function(id){ sv(id,''); });
   toggleManual();
   renderCompras(); updStatsC(); fillPEst();
@@ -1212,6 +1346,9 @@ function salvarManual() {
     qtdI:qtd,saldo:qtd,lote:gv('me-lote')||'-',forn:gv('me-forn')||'-',almo:gv('me-almo'),
     status:'Disponivel',hist:[{tipo:'Entrada',qtd:qtd,desc:'Cadastro manual',data:hoje(),saldoAp:qtd}]});
   ['me-nome','me-ins','me-qtd','me-lote','me-forn','me-oc'].forEach(function(id){ sv(id,''); });
+  var newEst = ESTS[ESTS.length-1];
+  sbFetch('POST','estoques', estToDB(newEst)).catch(function(e){ console.error(e); });
+  showToast('Estoque salvo: '+newEst.id, 'ok');
   closeModal('m-est'); renderEstoque(); fillPEst();
 }
 
@@ -1515,6 +1652,12 @@ function confirmar() {
   sv('r-ac','0'); sv('r-ap','0'); sv('r-bo','0');
   var totEl = document.getElementById('tot-pct'); if(totEl) totEl.textContent='0 kg';
 
+  // Save to Supabase
+  var proc = PROCESSOS[PROCESSOS.length-1];
+  sbFetch('POST','processos', procToDB(proc)).catch(function(e){ console.error(e); });
+  var updEst = ESTS.find(function(x){ return x.id===id; });
+  if (updEst) sbFetch('PATCH','estoques', estToDB(updEst), 'id=eq.'+id).catch(function(e){ console.error(e); });
+  showToast('Processo confirmado: '+proc.op, 'ok');
   goStep(1);
   fillPEst();
 }
@@ -1665,7 +1808,11 @@ function registrarAdic() {
     status:'Recebido', tipoLanc:'Adicionais'
   });
 
-  alert('Itens adicionais registrados! OC: '+ocId+' | Estoque: '+estId);
+  var aOC  = OCS[OCS.length-1];
+  var aEst = ESTS.find(function(x){ return x.id===estId; });
+  sbFetch('POST','compras',  ocToDB(aOC)).catch(function(e){ console.error(e); });
+  if (aEst) sbFetch('POST','estoques', estToDB(aEst)).catch(function(e){ console.error(e); });
+  showToast('Itens adicionais registrados: '+ocId, 'ok');
   // clear
   document.getElementById('adic-itens-list').innerHTML = '';
   addAdicItem();
@@ -1698,7 +1845,9 @@ function registrarFrete() {
     ocVinculada: ocVinc||null
   });
 
-  alert('Frete registrado! ID: '+ocId+(ocVinc?' | Vinculado a '+ocVinc:''));
+  var fOC = OCS[OCS.length-1];
+  sbFetch('POST','compras', ocToDB(fOC)).catch(function(e){ console.error(e); });
+  showToast('Frete registrado: '+ocId, 'ok');
   ['cf-transp','cf-nf','cf-valor','cf-obs'].forEach(function(id){ sv(id,''); });
   renderCompras(); updStatsC();
 }
@@ -1713,7 +1862,9 @@ function excluirEstoque(id) {
     return;
   }
   if (!confirm('Excluir o estoque ' + e.id + ' - ' + e.nome + '?')) return;
+  sbFetch('DELETE','estoques',null,'id=eq.'+id).catch(function(e){ console.error(e); });
   ESTS = ESTS.filter(function(x){ return x.id!==id; });
+  showToast('Estoque excluido', 'ok');
   renderEstoque();
   fillPEst();
   updStatsC();
@@ -1765,6 +1916,9 @@ function salvarEditEstoque() {
   e.forn   = gv('ed-forn');
   e.almo   = gv('ed-almo');
   e.status = gv('ed-status');
+  var editedEst = ESTS.find(function(x){ return x.id===id; });
+  if (editedEst) sbFetch('PATCH','estoques', estToDB(editedEst), 'id=eq.'+id).catch(function(e){ console.error(e); });
+  showToast('Estoque atualizado', 'ok');
   closeModal('m-edit-est');
   renderEstoque();
   fillPEst();
@@ -2053,35 +2207,31 @@ function imprimirRelatorio() {
   if (!corpo) return;
   var win = window.open('', '_blank');
   if (!win) { alert('Permita popups para imprimir.'); return; }
-  var css = [
-    'body{font-family:sans-serif;padding:24px;color:#1a2a1a}',
-    'table{width:100%;border-collapse:collapse;font-size:12px}',
-    'th{background:#f5faf5;padding:7px 10px;border-bottom:2px solid #ccc;text-align:left;font-size:10px;text-transform:uppercase;color:#777}',
-    'td{padding:7px 10px;border-bottom:1px solid #eee}',
-    '.fw6{font-weight:600}'
-  ].join('');
-  var titulo = document.getElementById('rel-titulo');
-  var nomeTit = titulo ? titulo.textContent.trim() : 'Relatorio';
+  var css = 'body{font-family:sans-serif;padding:24px;color:#1a2a1a}';
+  css += 'table{width:100%;border-collapse:collapse;font-size:12px}';
+  css += 'th{background:#f5faf5;padding:7px 10px;border-bottom:2px solid #ccc;text-align:left;font-size:10px;text-transform:uppercase;color:#777}';
+  css += 'td{padding:7px 10px;border-bottom:1px solid #eee}';
+  css += '.fw6{font-weight:600}';
+  var tituloEl = document.getElementById('rel-titulo');
+  var nomeTit  = tituloEl ? tituloEl.textContent.trim() : 'Relatorio';
+  var dataHoje = hoje();
   win.document.open();
-  win.document.write('<!DOCTYPE html>');
-  win.document.write('<html>');
-  win.document.write('<head>');
-  win.document.write('<meta charset="UTF-8">');
-  win.document.write('<title>' + nomeTit + '\x3c/title>');
-  win.document.write('<style>' + css + '\x3c/style>');
-  win.document.write('\x3c/head>');
-  win.document.write('<body>');
-  win.document.write('<h2 style="color:#2E6B30">' + nomeTit + '\x3c/h2>');
-  win.document.write('<p style="color:#888;font-size:12px;margin-bottom:16px">Gerado em ' + hoje() + '\x3c/p>');
+  win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>');
+  win.document.write(nomeTit);
+  win.document.write('\x3c/title><style>');
+  win.document.write(css);
+  win.document.write('\x3c/style>\x3c/head><body>');
+  win.document.write('<h2>');
+  win.document.write(nomeTit);
+  win.document.write('\x3c/h2><p style="color:#888;font-size:12px;margin-bottom:16px">Gerado em ');
+  win.document.write(dataHoje);
+  win.document.write('\x3c/p>');
   win.document.write(corpo.innerHTML);
-  win.document.write('\x3c/body>');
-  win.document.write('\x3c/html>');
+  win.document.write('\x3c/body>\x3c/html>');
   win.document.close();
   win.print();
 }
 
-// -- init --
-navTo('compras');
 </script>
 
 <!-- MODAL EDITAR ESTOQUE -->
@@ -2141,5 +2291,7 @@ navTo('compras');
   </div>
 </div>
 
+
+<div id="toast" style="display:none;position:fixed;bottom:24px;right:24px;z-index:999;background:#2E6B30;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-family:inherit;box-shadow:0 4px 16px rgba(0,0,0,.2);align-items:center;gap:8px;max-width:320px"></div>
 </body>
 </html>
