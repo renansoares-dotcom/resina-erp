@@ -156,6 +156,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f0;color:#1a2a1
     <div class="nsep"></div>
     <div class="nl" id="nl-processo" onclick="navTo('processo')"><i class="ti ti-settings-2"></i>Processo</div>
     <div class="nsep"></div>
+    <div class="nsep"></div>
+    <div class="nl" id="nl-faturamento" onclick="navTo('faturamento')"><i class="ti ti-receipt"></i>Faturamento</div>
+    <div class="nl" id="nl-financeiro"  onclick="navTo('financeiro')"><i class="ti ti-coin"></i>Financeiro</div>
+    <div class="nsep"></div>
     <div class="nl" id="nl-analises"   onclick="navTo('analises')"><i class="ti ti-chart-bar"></i>Analises</div>
     <div class="nl" id="nl-relatorios" onclick="navTo('relatorios')"><i class="ti ti-file-text"></i>Relatorios</div>
   </div>
@@ -263,14 +267,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f0;color:#1a2a1
           <div class="seclab">Entrada Manual de Insumo</div>
           <div class="fg2" style="margin-bottom:11px">
             <div class="fr"><label>Fornecedor</label><input id="cm-forn" type="text" placeholder="Nome do fornecedor"/></div>
-            <div class="fr"><label>Tipo de Insumo</label>
-              <select id="cm-tipo">
-                <option>Resina Base - PEBD</option><option>Resina Base - PEAD</option><option>Resina Base - PP</option>
-                <option>Aditivo - Antblock</option><option>Aditivo - Deslizante</option>
-                <option>Aditivo - Antiestatico</option><option>Aditivo - UV</option>
-                <option>Masterbatch / Pigmento</option><option>Reprocessado / Reciclado</option>
-              </select>
-            </div>
+            <div class="fr"><label>Tipo de Insumo</label><input id="cm-tipo" type="text" placeholder="Ex: Resina Base, Aditivo..."/></div>
             <div class="fr"><label>Produto / Codigo</label><input id="cm-prod" type="text" placeholder="Ex: PEBD GP-101"/></div>
             <div class="fr"><label>Nota Fiscal Nr</label><input id="cm-nf" type="text" placeholder="000000"/></div>
           </div>
@@ -281,13 +278,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f0;color:#1a2a1
           </div>
           <div class="fg3" style="margin-bottom:11px">
             <div class="fr"><label>Lote / Certificado</label><input id="cm-lote" type="text" placeholder="Nr do lote"/></div>
-            <div class="fr"><label>Almoxarifado</label>
-              <select id="cm-almo">
-                <option>Almoxarifado A - Resinas</option>
-                <option>Almoxarifado B - Aditivos</option>
-                <option>Almoxarifado C - Embalagens</option>
-              </select>
-            </div>
+            <div class="fr"><label>Almoxarifado</label><input id="cm-almo" type="text" placeholder="Ex: Almoxarifado A"/></div>
             <div class="fr"><label>Estoque de destino</label>
               <select id="cm-est-dest"><option value="novo">-- Criar novo estoque --</option></select>
             </div>
@@ -512,36 +503,15 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f0;color:#1a2a1
     </div>
     <div id="step-3" style="display:none">
       <div class="card">
-        <div class="ch">
-          <div class="ct"><i class="ti ti-settings-2"></i>Dados do Processo</div>
-        </div>
+        <div class="ch"><div class="ct"><i class="ti ti-settings-2"></i>Dados do Processo</div></div>
         <div class="cb">
           <div class="fg2" style="margin-bottom:12px">
-            <div class="fr"><label>Extrusora</label>
-              <select id="pr-extrusora">
-                <option>EXT-01 - Blown Film</option>
-                <option>EXT-02 - Flat Film</option>
-                <option>EXT-03 - Tubular</option>
-                <option>EXT-04 - Multipla</option>
-              </select>
-            </div>
-            <div class="fr"><label>Turno</label>
-              <select id="pr-turno">
-                <option>1 Turno - 06h as 14h</option>
-                <option>2 Turno - 14h as 22h</option>
-                <option>3 Turno - 22h as 06h</option>
-              </select>
-            </div>
+            <div class="fr"><label>Extrusora</label><input id="pr-extrusora" type="text" placeholder="Ex: EXT-01, Linha 2..."/></div>
+            <div class="fr"><label>Turno</label><input id="pr-turno" type="text" placeholder="Ex: 1 Turno, Noturno..."/></div>
           </div>
-          <div class="fg3" style="margin-bottom:12px">
+          <div class="fg2" style="margin-bottom:12px">
             <div class="fr"><label>Inicio da Producao</label><input id="pr-inicio" type="datetime-local"/></div>
             <div class="fr"><label>Fim da Producao</label><input id="pr-fim" type="datetime-local"/></div>
-            <div class="fr"><label>Operador Responsavel</label><input id="pr-operador" type="text" placeholder="Nome do operador"/></div>
-          </div>
-          <div class="fg3" style="margin-bottom:12px">
-            <div class="fr"><label>Velocidade Linha (m/min)</label><input id="pr-velocidade" type="number" placeholder="0"/></div>
-            <div class="fr"><label>Espessura Alvo (um)</label><input id="pr-espessura" type="number" placeholder="0"/></div>
-            <div class="fr"><label>Largura (mm)</label><input id="pr-largura" type="number" placeholder="0"/></div>
           </div>
           <div class="sep"></div>
           <div class="seclab">Producao Obtida</div>
@@ -583,12 +553,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f0;color:#1a2a1
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
             <div class="ii"><span class="il">Extrusora</span><span class="iv" id="r-extrusora">-</span></div>
             <div class="ii"><span class="il">Turno</span><span class="iv" id="r-turno">-</span></div>
-            <div class="ii"><span class="il">Operador</span><span class="iv" id="r-operador">-</span></div>
-            <div class="ii"><span class="il">Velocidade</span><span class="iv" id="r-velocidade">-</span></div>
             <div class="ii"><span class="il">Inicio</span><span class="iv" id="r-inicio">-</span></div>
             <div class="ii"><span class="il">Fim</span><span class="iv" id="r-fim">-</span></div>
-            <div class="ii"><span class="il">Espessura Alvo</span><span class="iv" id="r-espessura">-</span></div>
-            <div class="ii"><span class="il">Largura</span><span class="iv" id="r-largura">-</span></div>
           </div>
 
           <!-- BLOCO 3: Composicao -->
@@ -714,62 +680,249 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f0;color:#1a2a1
     </div>
   </div>
 
+  <!-- ===== FATURAMENTO ===== -->
+  <div class="panel" id="panel-faturamento">
+    <div class="stats">
+      <div class="sc"><div class="slb">NFs Emitidas</div><div class="sv" id="fat-tot">0</div><div class="ss" id="fat-sub">no periodo</div></div>
+      <div class="sc"><div class="slb">Valor Total</div><div class="sv" id="fat-val">R$ 0</div><div class="ss" id="fat-val2">faturado</div></div>
+      <div class="sc"><div class="slb">Clientes</div><div class="sv" id="fat-cli">0</div><div class="ss">distintos</div></div>
+      <div class="sc"><div class="slb">Ultimo Registro</div><div class="sv" id="fat-ult" style="font-size:14px">-</div><div class="ss">data</div></div>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div class="ct"><i class="ti ti-file-import"></i>Registrar Nota Fiscal de Saida (NF-e)</div></div>
+      <div class="cb">
+
+        <!-- ABAS -->
+        <div class="tab-area">
+          <button class="tab-btn on" id="ftab-nfe"    onclick="switchFatTab('nfe')"><i class="ti ti-file-import"></i>NF-e XML</button>
+          <button class="tab-btn"    id="ftab-manual" onclick="switchFatTab('manual')"><i class="ti ti-keyboard"></i>Manual</button>
+        </div>
+
+        <!-- ABA NF-e XML -->
+        <div id="faba-nfe">
+          <div class="nfe-drop" id="fat-nfe-drop"
+            onclick="document.getElementById('fat-nfe-input').click()"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="onFatNFeDrop(event)">
+            <i class="ti ti-cloud-upload"></i>
+            <p>Clique ou arraste o XML da NF-e de saida aqui</p>
+            <span>Formato: NF-e padrao SEFAZ (.xml)</span>
+          </div>
+          <input type="file" id="fat-nfe-input" accept=".xml" style="display:none" onchange="onFatNFeFile(event)"/>
+
+          <div id="fat-nfe-banner" style="display:none" class="nfe-banner">
+            <i class="ti ti-circle-check"></i>
+            <div class="nfe-banner-info">
+              <p id="fat-banner-title">NF-e carregada</p>
+              <span id="fat-banner-sub">-</span>
+            </div>
+            <button class="btn btnsm" style="margin-left:auto" onclick="limparFatNFe()"><i class="ti ti-x"></i>Limpar</button>
+          </div>
+
+          <div id="fat-nfe-form" style="display:none">
+            <div class="seclab">Dados da Nota Fiscal de Saida</div>
+            <div class="fg4" style="margin-bottom:12px">
+              <div class="fr"><label>Nr da NF</label><input id="fat-nf" type="text" readonly/></div>
+              <div class="fr"><label>Data de Emissao</label><input id="fat-data" type="text" readonly/></div>
+              <div class="fr"><label>Cliente (Destinatario)</label><input id="fat-cli-nome" type="text" readonly/></div>
+              <div class="fr"><label>CNPJ Destinatario</label><input id="fat-cli-cnpj" type="text" readonly/></div>
+            </div>
+            <div class="fg3" style="margin-bottom:12px">
+              <div class="fr"><label>Valor Total (R$)</label><input id="fat-vtotal" type="text" readonly/></div>
+              <div class="fr"><label>Chave de Acesso</label><input id="fat-chave" type="text" readonly/></div>
+              <div class="fr"><label>Natureza da Operacao</label><input id="fat-natop" type="text" readonly/></div>
+            </div>
+            <div class="seclab">Itens da Nota</div>
+            <div id="fat-nfe-itens"></div>
+            <div class="seclab">Vincular a Ordem de Processo</div>
+            <div class="fg2" style="margin-bottom:12px">
+              <div class="fr">
+                <label>Ordem de Processo (OP)</label>
+                <select id="fat-op" onchange="onSelFatOP('fat')">
+                  <option value="">-- Nao vincular --</option>
+                </select>
+              </div>
+              <div class="fr" id="fat-op-info-wrap" style="display:none">
+                <label>Detalhe da OP</label>
+                <input id="fat-op-info" type="text" readonly style="color:#2E6B30;font-weight:600"/>
+              </div>
+            </div>
+            <div class="seclab">Informacoes Adicionais</div>
+            <div class="fg3" style="margin-bottom:12px">
+              <div class="fr"><label>Vendedor / Representante</label><input id="fat-vendedor" type="text" placeholder="Nome do vendedor"/></div>
+              <div class="fr"><label>Condicao de Pagamento</label>
+                <select id="fat-cond">
+                  <option>A Vista</option>
+                  <option>30 dias</option>
+                  <option>30/60 dias</option>
+                  <option>30/60/90 dias</option>
+                  <option>60 dias</option>
+                  <option>Outro</option>
+                </select>
+              </div>
+              <div class="fr"><label>Transportadora</label><input id="fat-transp" type="text" placeholder="Nome da transportadora"/></div>
+            </div>
+            <div class="fr" style="margin-bottom:14px"><label>Observacoes</label><textarea id="fat-obs" placeholder="Informacoes adicionais..."></textarea></div>
+            <div style="display:flex;justify-content:flex-end;gap:8px">
+              <button class="btn" onclick="limparFatNFe()">Cancelar</button>
+              <button class="btn btnp" onclick="registrarFaturamento()"><i class="ti ti-check"></i>Registrar Nota</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA MANUAL -->
+        <div id="faba-manual" style="display:none">
+          <div class="seclab">Registro Manual de NF de Saida</div>
+          <div class="fg2" style="margin-bottom:11px">
+            <div class="fr"><label>Cliente</label><input id="fm-cli" type="text" placeholder="Nome do cliente"/></div>
+            <div class="fr"><label>CNPJ do Cliente</label><input id="fm-cnpj" type="text" placeholder="00.000.000/0000-00"/></div>
+          </div>
+          <div class="fg3" style="margin-bottom:11px">
+            <div class="fr"><label>Nr da NF</label><input id="fm-nf" type="text" placeholder="000000"/></div>
+            <div class="fr"><label>Data de Emissao</label><input id="fm-data" type="date"/></div>
+            <div class="fr"><label>Valor Total (R$)</label><input id="fm-valor" type="number" placeholder="0.00" step="0.01"/></div>
+          </div>
+          <div class="fg3" style="margin-bottom:11px">
+            <div class="fr"><label>Produto / Descricao</label><input id="fm-prod" type="text" placeholder="Ex: Filme Stretch 25mi"/></div>
+            <div class="fr"><label>Quantidade (kg)</label><input id="fm-qtd" type="number" placeholder="0"/></div>
+            <div class="fr"><label>Condicao de Pagamento</label>
+              <select id="fm-cond">
+                <option>A Vista</option><option>30 dias</option><option>30/60 dias</option>
+                <option>30/60/90 dias</option><option>60 dias</option><option>Outro</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg2" style="margin-bottom:11px">
+            <div class="fr">
+              <label>Ordem de Processo (OP)</label>
+              <select id="fm-op" onchange="onSelFatOP('fm')">
+                <option value="">-- Nao vincular --</option>
+              </select>
+            </div>
+            <div class="fr" id="fm-op-info-wrap" style="display:none">
+              <label>Detalhe da OP</label>
+              <input id="fm-op-info" type="text" readonly/>
+            </div>
+          </div>
+          <div class="fg2" style="margin-bottom:11px">
+            <div class="fr"><label>Vendedor / Representante</label><input id="fm-vendedor" type="text" placeholder="Nome"/></div>
+            <div class="fr"><label>Transportadora</label><input id="fm-transp" type="text" placeholder="Nome"/></div>
+
+          <div class="fr" style="margin-bottom:13px"><label>Observacoes</label><textarea id="fm-obs" placeholder="Informacoes adicionais..."></textarea></div>
+          <div style="display:flex;justify-content:flex-end">
+            <button class="btn btnp" onclick="registrarFatManual()"><i class="ti ti-check"></i>Registrar</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- HISTORICO -->
+    <div class="card">
+      <div class="ch">
+        <div class="ct"><i class="ti ti-list"></i>Historico de Faturamento</div>
+        <input type="text" id="fat-busca" class="ci" style="width:200px;font-size:12px;padding:5px 9px" placeholder="Buscar cliente ou NF..." oninput="renderFaturamento()"/>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <thead><tr><th>NF</th><th>Cliente</th><th>CNPJ</th><th>Produto / Itens</th><th>OP Vinculada</th><th>Valor Total</th><th>Cond. Pgto</th><th>Data</th><th>Status</th><th></th></tr></thead>
+          <tbody id="fat-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ANALISES ===== -->
+  <div class="panel" id="panel-analises">
+    <div class="stats">
+      <div class="sc"><div class="slb">Total Processos</div><div class="sv" id="an-tot-proc">0</div><div class="ss">registrados</div></div>
+      <div class="sc"><div class="slb">Produto Acabado</div><div class="sv" id="an-tot-ac">0 kg</div><div class="ss">total produzido</div></div>
+      <div class="sc"><div class="slb">Aproveitamento Medio</div><div class="sv" id="an-aprov-med" style="color:#2E6B30">-%</div><div class="ss">eficiencia geral</div></div>
+      <div class="sc"><div class="slb">Total Sobras</div><div class="sv" id="an-tot-sob" style="color:#b07a00">0 kg</div><div class="ss">aparas + borra</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+      <div class="card">
+        <div class="ch"><div class="ct"><i class="ti ti-cube"></i>Producao por Produto</div></div>
+        <div class="cb" style="padding:0">
+          <table class="tbl"><thead><tr><th>Produto</th><th>Processos</th><th>Total kg</th><th>Aprov. Medio</th></tr></thead>
+          <tbody id="an-por-produto"></tbody></table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct"><i class="ti ti-package"></i>Consumo por Estoque</div></div>
+        <div class="cb" style="padding:0">
+          <table class="tbl"><thead><tr><th>Estoque</th><th>Insumo</th><th>Consumido</th><th>Saldo Atual</th></tr></thead>
+          <tbody id="an-por-estoque"></tbody></table>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="ct"><i class="ti ti-history"></i>Historico de Processos</div></div>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <thead><tr><th>OP</th><th>Produto</th><th>Estoque</th><th>Operador</th><th>Acabado</th><th>Aparas</th><th>Borra</th><th>Aprov.</th><th>Data</th></tr></thead>
+          <tbody id="an-historico"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== RELATORIOS ===== -->
   <div class="panel" id="panel-relatorios">
     <div class="seclab">Gerar Relatorio</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
-
-      <div class="card" style="cursor:pointer;transition:.15s" onclick="gerarRelatorio('processos')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('processos')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
         <div class="cb" style="text-align:center;padding:24px 16px">
           <i class="ti ti-settings-2" style="font-size:32px;color:#4CAF50;display:block;margin-bottom:10px"></i>
           <div style="font-size:14px;font-weight:600;margin-bottom:4px">Relatorio de Processos</div>
-          <div class="muted">Todos os processos realizados com detalhes de producao, composicao e aproveitamento</div>
+          <div class="muted">Todos os processos com detalhes de producao e aproveitamento</div>
         </div>
       </div>
-
-      <div class="card" style="cursor:pointer;transition:.15s" onclick="gerarRelatorio('estoque')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('estoque')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
         <div class="cb" style="text-align:center;padding:24px 16px">
           <i class="ti ti-package" style="font-size:32px;color:#29ABE2;display:block;margin-bottom:10px"></i>
           <div style="font-size:14px;font-weight:600;margin-bottom:4px">Relatorio de Estoque</div>
-          <div class="muted">Posicao atual dos estoques com historico de entradas e consumos por lote</div>
+          <div class="muted">Posicao atual com historico de entradas e consumos por lote</div>
         </div>
       </div>
-
-      <div class="card" style="cursor:pointer;transition:.15s" onclick="gerarRelatorio('compras')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('compras')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
         <div class="cb" style="text-align:center;padding:24px 16px">
           <i class="ti ti-shopping-cart" style="font-size:32px;color:#f59e0b;display:block;margin-bottom:10px"></i>
           <div style="font-size:14px;font-weight:600;margin-bottom:4px">Relatorio de Compras</div>
-          <div class="muted">Historico de todas as compras com NF, fornecedores, valores e vinculos com estoque</div>
+          <div class="muted">Historico de compras com NF, fornecedores e vinculos de estoque</div>
         </div>
       </div>
-
-      <div class="card" style="cursor:pointer;transition:.15s" onclick="gerarRelatorio('rastreabilidade')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('rastreabilidade')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
         <div class="cb" style="text-align:center;padding:24px 16px">
           <i class="ti ti-route" style="font-size:32px;color:#a855f7;display:block;margin-bottom:10px"></i>
           <div style="font-size:14px;font-weight:600;margin-bottom:4px">Rastreabilidade por Lote</div>
-          <div class="muted">Rastreio completo de um lote: da NF de compra ate o produto acabado</div>
+          <div class="muted">Da NF de compra ate o produto acabado</div>
         </div>
       </div>
-
-      <div class="card" style="cursor:pointer;transition:.15s" onclick="gerarRelatorio('sobras')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('sobras')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
         <div class="cb" style="text-align:center;padding:24px 16px">
           <i class="ti ti-recycle" style="font-size:32px;color:#e74c3c;display:block;margin-bottom:10px"></i>
           <div style="font-size:14px;font-weight:600;margin-bottom:4px">Relatorio de Sobras</div>
-          <div class="muted">Aparas e borras por processo com destinos e percentual de perda</div>
+          <div class="muted">Aparas e borras por processo com percentual de perda</div>
         </div>
       </div>
-
-      <div class="card" style="cursor:pointer;transition:.15s" onclick="gerarRelatorio('eficiencia')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('eficiencia')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
         <div class="cb" style="text-align:center;padding:24px 16px">
           <i class="ti ti-trending-up" style="font-size:32px;color:#2E6B30;display:block;margin-bottom:10px"></i>
           <div style="font-size:14px;font-weight:600;margin-bottom:4px">Eficiencia Produtiva</div>
-          <div class="muted">Aproveitamento medio por extrusora, turno, produto e operador</div>
+          <div class="muted">Aproveitamento medio por extrusora, turno e operador</div>
         </div>
       </div>
-
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('faturamento')" onmouseover="this.style.boxShadow='0 4px 16px rgba(46,107,48,.15)'" onmouseout="this.style.boxShadow='none'">
+        <div class="cb" style="text-align:center;padding:24px 16px">
+          <i class="ti ti-receipt" style="font-size:32px;color:#1276a0;display:block;margin-bottom:10px"></i>
+          <div style="font-size:14px;font-weight:600;margin-bottom:4px">Relatorio de Faturamento</div>
+          <div class="muted">Notas emitidas com clientes, valores e OPs vinculadas</div>
+        </div>
+      </div>
     </div>
-
-    <!-- Resultado do relatorio gerado -->
     <div id="rel-resultado" style="display:none">
       <div class="card">
         <div class="ch">
@@ -785,53 +938,282 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f0;color:#1a2a1
   </div>
 
 
-</div>
-
-<!-- MODAL NOVO ESTOQUE -->
-<div class="mover" id="m-est">
-  <div class="modal">
-    <div class="mh">
-      <div class="mt"><i class="ti ti-package"></i>Novo Estoque Manual</div>
-      <button class="xbtn" onclick="closeModal('m-est')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="mb">
-      <div class="fg2" style="margin-bottom:11px">
-        <div class="fr"><label>Nome do Estoque</label><input id="me-nome" type="text" placeholder="Ex: Estoque PEBD Lote 01"/></div>
-        <div class="fr"><label>Insumo / Produto</label><input id="me-ins" type="text" placeholder="Ex: PEBD GP-101"/></div>
-      </div>
-      <div class="fg2" style="margin-bottom:11px">
-        <div class="fr"><label>Tipo</label>
-          <select id="me-tipo"><option>Resina Base</option><option>Aditivo - Antblock</option><option>Aditivo - Deslizante</option><option>Masterbatch</option><option>Reprocessado</option></select>
-        </div>
-        <div class="fr"><label>NF / OC (opcional)</label><input id="me-oc" type="text" placeholder="NF-001 / OC-0001"/></div>
-      </div>
-      <div class="fg3" style="margin-bottom:11px">
-        <div class="fr"><label>Quantidade (kg)</label><input id="me-qtd" type="number" placeholder="0"/></div>
-        <div class="fr"><label>Lote</label><input id="me-lote" type="text" placeholder="Nr lote"/></div>
-        <div class="fr"><label>Fornecedor</label><input id="me-forn" type="text" placeholder="Nome"/></div>
-      </div>
-      <div class="fr"><label>Almoxarifado</label>
-        <select id="me-almo"><option>Almoxarifado A - Resinas</option><option>Almoxarifado B - Aditivos</option><option>Almoxarifado C - Embalagens</option></select>
-      </div>
-    </div>
-    <div class="mf">
-      <button class="btn" onclick="closeModal('m-est')">Cancelar</button>
-      <button class="btn btnp" onclick="salvarManual()"><i class="ti ti-check"></i>Salvar</button>
+  <!-- ===== FINANCEIRO ===== -->
+  <div class="panel" id="panel-financeiro">
+    <div style="background:#fff;border:1px solid #d4e4d4;border-radius:10px;padding:40px;text-align:center;color:#7a9a7a">
+      <i class="ti ti-coin" style="font-size:48px;color:#c8dcc8;display:block;margin-bottom:12px"></i>
+      <div style="font-size:16px;font-weight:600;margin-bottom:8px;color:#1a2a1a">Modulo Financeiro</div>
+      <div style="font-size:13px">Aguardando configuracao. Envie as instrucoes para ativar este modulo.</div>
     </div>
   </div>
-</div>
-
-<!-- DRAWER -->
-<div class="dover" id="d-over" onclick="closeDrawer()"></div>
-<div class="drawer" id="d-drawer">
-  <div class="dh">
-    <div class="dt" id="d-title">Detalhe</div>
-    <button class="xbtn" onclick="closeDrawer()"><i class="ti ti-x"></i></button>
-  </div>
-  <div class="db" id="d-body"></div>
-</div>
 
 <script>
+
+// ============================================================
+// FATURAMENTO
+// ============================================================
+var FATURAMENTOS = [];
+var fatNFeData   = null;
+var fatSeq       = 1;
+
+function switchFatTab(tab) {
+  ['nfe','manual'].forEach(function(t) {
+    var a = document.getElementById('faba-'+t);
+    var b = document.getElementById('ftab-'+t);
+    if (a) a.style.display = t===tab ? 'block' : 'none';
+    if (b) b.classList.toggle('on', t===tab);
+  });
+}
+
+// NF-e drop/file
+function onFatNFeDrop(e) {
+  e.preventDefault();
+  var drop = document.getElementById('fat-nfe-drop');
+  if (drop) drop.classList.remove('drag');
+  var file = e.dataTransfer.files[0];
+  if (file) parseFatNFe(file);
+}
+function onFatNFeFile(e) {
+  var file = e.target.files[0];
+  if (file) parseFatNFe(file);
+}
+
+function parseFatNFe(file) {
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      var parser = new DOMParser();
+      var xml    = parser.parseFromString(ev.target.result, 'text/xml');
+      var err    = xml.getElementsByTagName('parsererror');
+      if (err.length) { alert('Arquivo XML invalido.'); return; }
+
+      var nNF    = gi('nNF', xml);
+      var dEmi   = gi('dhEmi', xml) || gi('dEmi', xml);
+      var natOp  = gi('natOp', xml);
+      var chNFe  = gi('chNFe', xml);
+      var vNF    = gi('vNF', xml);
+
+      // Destinatario (cliente)
+      var dest   = xml.getElementsByTagName('dest');
+      var xNome  = dest.length ? gi('xNome', dest[0]) : gi('xNome', xml);
+      var CNPJ   = dest.length ? gi('CNPJ',  dest[0]) : '';
+      var cnpjFmt = CNPJ.length===14
+        ? CNPJ.substring(0,2)+'.'+CNPJ.substring(2,5)+'.'+CNPJ.substring(5,8)+'/'+CNPJ.substring(8,12)+'-'+CNPJ.substring(12)
+        : CNPJ;
+
+      // Items
+      var dets = xml.getElementsByTagName('det');
+      var itens = [];
+      for (var i=0; i<dets.length; i++) {
+        var det = dets[i];
+        itens.push({
+          xProd:  gi('xProd',  det),
+          cProd:  gi('cProd',  det),
+          NCM:    gi('NCM',    det),
+          qCom:   parseFloat(gi('qCom',  det)) || 0,
+          vUnCom: parseFloat(gi('vUnCom',det)) || 0,
+          uCom:   gi('uCom',  det),
+          vProd:  parseFloat(gi('vProd', det)) || 0
+        });
+      }
+
+      fatNFeData = {
+        nNF: nNF, data: dEmi ? dEmi.substring(0,10) : '',
+        cliente: xNome, cnpj: cnpjFmt,
+        chNFe: chNFe, vNF: parseFloat(vNF)||0,
+        natOp: natOp, itens: itens
+      };
+
+      preencherFatForm();
+    } catch(ex) { alert('Erro ao ler XML: ' + ex.message); }
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function preencherFatForm() {
+  if (!fatNFeData) return;
+  var drop   = document.getElementById('fat-nfe-drop');
+  var banner = document.getElementById('fat-nfe-banner');
+  var form   = document.getElementById('fat-nfe-form');
+  if (drop)   drop.style.display   = 'none';
+  if (banner) banner.style.display = 'flex';
+  if (form)   form.style.display   = 'block';
+
+  document.getElementById('fat-banner-title').textContent = 'NF-e ' + fatNFeData.nNF + ' - ' + fatNFeData.cliente;
+  document.getElementById('fat-banner-sub').textContent   = fatNFeData.itens.length + ' item(s) | Total: ' + fmtM(fatNFeData.vNF) + ' | ' + fatNFeData.data;
+
+  sv('fat-nf',       fatNFeData.nNF);
+  sv('fat-data',     fatNFeData.data);
+  sv('fat-cli-nome', fatNFeData.cliente);
+  sv('fat-cli-cnpj', fatNFeData.cnpj);
+  sv('fat-vtotal',   fmtM(fatNFeData.vNF));
+  sv('fat-chave',    fatNFeData.chNFe);
+  sv('fat-natop',    fatNFeData.natOp);
+
+  // Render items
+  var container = document.getElementById('fat-nfe-itens');
+  container.innerHTML = '';
+  fatNFeData.itens.forEach(function(it, idx) {
+    var row  = document.createElement('div'); row.className = 'item-row';
+    var top  = document.createElement('div'); top.className = 'item-row-top';
+    var left = document.createElement('div');
+    var num  = document.createElement('div'); num.className = 'item-num';  num.textContent = 'Item '+(idx+1);
+    var nome = document.createElement('div'); nome.className = 'item-nome'; nome.textContent = it.xProd;
+    var meta = document.createElement('div'); meta.className = 'item-meta';
+    meta.textContent = 'Cod: '+it.cProd+' | NCM: '+it.NCM+' | '+fmtN(it.qCom)+' '+it.uCom+' x '+fmtM(it.vUnCom)+' = '+fmtM(it.vProd);
+    left.appendChild(num); left.appendChild(nome); left.appendChild(meta);
+    var right  = document.createElement('div');
+    var badge  = document.createElement('span'); badge.className = 'sb sok';
+    badge.textContent = fmtN(it.qCom)+' '+it.uCom;
+    right.appendChild(badge);
+    top.appendChild(left); top.appendChild(right);
+    row.appendChild(top);
+    container.appendChild(row);
+  });
+}
+
+function limparFatNFe() {
+  fatNFeData = null;
+  var drop   = document.getElementById('fat-nfe-drop');
+  var banner = document.getElementById('fat-nfe-banner');
+  var form   = document.getElementById('fat-nfe-form');
+  var inp    = document.getElementById('fat-nfe-input');
+  if (drop)   drop.style.display   = 'block';
+  if (banner) banner.style.display = 'none';
+  if (form)   form.style.display   = 'none';
+  if (inp)    inp.value             = '';
+}
+
+function registrarFaturamento() {
+  if (!fatNFeData) { alert('Importe uma NF-e primeiro.'); return; }
+  var id = 'FAT-' + pad(fatSeq++, 4);
+  var reg = {
+    id:        id,
+    nf:        fatNFeData.nNF,
+    cliente:   fatNFeData.cliente,
+    cnpj:      fatNFeData.cnpj,
+    itens:     fatNFeData.itens,
+    vTotal:    fatNFeData.vNF,
+    chNFe:     fatNFeData.chNFe,
+    natOp:     fatNFeData.natOp,
+    data:      fatNFeData.data,
+    vendedor:  gv('fat-vendedor'),
+    cond:      gv('fat-cond'),
+    transp:    gv('fat-transp'),
+    obs:       gv('fat-obs'),
+    op:        gv('fat-op') || null,
+    status:    'Emitida',
+    tipo:      'NF-e XML'
+  };
+  FATURAMENTOS.push(reg);
+  sbFetch('POST', 'faturamentos', fatToDB(reg)).catch(function(e){ console.error(e); });
+  showToast('NF registrada: ' + id, 'ok');
+  limparFatNFe();
+  sv('fat-vendedor',''); sv('fat-transp',''); sv('fat-obs','');
+  renderFaturamento();
+  updStatsFat();
+}
+
+function registrarFatManual() {
+  var cli   = gv('fm-cli').trim();
+  var nf    = gv('fm-nf').trim();
+  var valor = parseFloat(gv('fm-valor')) || 0;
+  if (!cli || !nf || !valor) { alert('Preencha cliente, NF e valor.'); return; }
+  var id = 'FAT-' + pad(fatSeq++, 4);
+  var reg = {
+    id: id, nf: nf, cliente: cli, cnpj: gv('fm-cnpj'),
+    itens: [{xProd: gv('fm-prod'), qCom: parseFloat(gv('fm-qtd'))||0, vUnCom: 0, uCom:'KG', vProd: valor, cProd:'', NCM:''}],
+    vTotal: valor, chNFe: '', natOp: 'Venda',
+    data: gv('fm-data'), vendedor: gv('fm-vendedor'),
+    cond: gv('fm-cond'), transp: gv('fm-transp'),
+    obs: gv('fm-obs'), op: gv('fm-op')||null, status: 'Emitida', tipo: 'Manual'
+  };
+  FATURAMENTOS.push(reg);
+  sbFetch('POST', 'faturamentos', fatToDB(reg)).catch(function(e){ console.error(e); });
+  showToast('NF manual registrada: ' + id, 'ok');
+  ['fm-cli','fm-cnpj','fm-nf','fm-valor','fm-prod','fm-qtd','fm-vendedor','fm-transp','fm-obs'].forEach(function(i){ sv(i,''); });
+  renderFaturamento();
+  updStatsFat();
+}
+
+function fatToDB(r) {
+  return {
+    id: r.id, nf: r.nf, cliente: r.cliente, cnpj: r.cnpj||null,
+    itens: r.itens||[], v_total: r.vTotal, ch_nfe: r.chNFe||null,
+    nat_op: r.natOp||null, data: r.data||null,
+    vendedor: r.vendedor||null, cond_pgto: r.cond||null,
+    transportadora: r.transp||null, obs: r.obs||null,
+    status: r.status, tipo: r.tipo
+  };
+}
+function dbToFat(r) {
+  return {
+    id: r.id, nf: r.nf, cliente: r.cliente, cnpj: r.cnpj,
+    itens: r.itens||[], vTotal: r.v_total, chNFe: r.ch_nfe,
+    natOp: r.nat_op, data: r.data,
+    vendedor: r.vendedor, cond: r.cond_pgto,
+    transp: r.transportadora, obs: r.obs,
+    op: r.op_vinculada||null,
+    status: r.status, tipo: r.tipo
+  };
+}
+
+function renderFaturamento() {
+  var busca = (gv('fat-busca')||'').toLowerCase();
+  var lista = FATURAMENTOS.filter(function(f){
+    return !busca || f.cliente.toLowerCase().includes(busca) || f.nf.includes(busca);
+  });
+  var tb = document.getElementById('fat-tbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+  if (!lista.length) {
+    var tr=document.createElement('tr'); var td=document.createElement('td');
+    td.colSpan=10; td.style.cssText='text-align:center;color:#aaa;padding:20px';
+    td.textContent='Nenhuma nota registrada.'; tr.appendChild(td); tb.appendChild(tr); return;
+  }
+  lista.slice().reverse().forEach(function(f) {
+    var tr = document.createElement('tr');
+    var itDesc = f.itens.length===1 ? f.itens[0].xProd : f.itens.length+' itens';
+    [{t:'NF-'+f.nf,cls:'fw6'},{t:f.cliente},{t:f.cnpj||'-'},{t:itDesc},
+     {t:f.op||'-',css:f.op?'color:#2E6B30;font-weight:600':''},
+     {t:fmtM(f.vTotal),css:'font-weight:600'},{t:f.cond||'-'},{t:f.data||'-'}]
+    .forEach(function(c){
+      var td=document.createElement('td');
+      if(c.cls) td.className=c.cls;
+      if(c.css) td.style.cssText=c.css;
+      td.textContent=c.t; tr.appendChild(td);
+    });
+    var stTd=document.createElement('td');
+    var sp=document.createElement('span'); sp.className='sb sok'; sp.textContent=f.status||'Emitida';
+    stTd.appendChild(sp); tr.appendChild(stTd);
+    var acTd=document.createElement('td');
+    var btnDel=document.createElement('button'); btnDel.className='btn btnd btnsm'; btnDel.title='Excluir';
+    btnDel.innerHTML='\x3ci class="ti ti-trash">\x3c/i>';
+    btnDel.onclick=(function(id){ return function(){
+      if(!confirm('Excluir este registro?')) return;
+      FATURAMENTOS=FATURAMENTOS.filter(function(x){return x.id!==id;});
+      sbFetch('DELETE','faturamentos',null,'id=eq.'+id).catch(function(e){console.error(e);});
+      renderFaturamento(); updStatsFat();
+    }; })(f.id);
+    acTd.appendChild(btnDel); tr.appendChild(acTd);
+    tb.appendChild(tr);
+  });
+}
+
+function updStatsFat() {
+  var tot = FATURAMENTOS.length;
+  setText('fat-tot', tot);
+  var val = FATURAMENTOS.reduce(function(s,f){ return s+f.vTotal; }, 0);
+  setText('fat-val', val>=1000 ? 'R$ '+Math.round(val/1000)+'k' : fmtM(val));
+  var clis = {};
+  FATURAMENTOS.forEach(function(f){ clis[f.cliente]=1; });
+  setText('fat-cli', Object.keys(clis).length);
+  if (FATURAMENTOS.length) {
+    var last = FATURAMENTOS[FATURAMENTOS.length-1];
+    setText('fat-ult', last.data||'-');
+  }
+}
+
 // ============================================================
 // SUPABASE CONFIG
 // ============================================================
@@ -870,6 +1252,8 @@ async function carregarDados() {
       sbFetch('GET', 'estoques', null, 'order=created_at.asc'),
       sbFetch('GET', 'processos',null, 'order=created_at.asc')
     ]);
+    var fats = await sbFetch('GET','faturamentos',null,'order=created_at.asc');
+    if (fats) FATURAMENTOS = fats.map(dbToFat);
 
     if (comps)  OCS       = comps.map(dbToOC);
     if (ests)   ESTS      = ests.map(dbToEst);
@@ -985,10 +1369,12 @@ var modCfg = {
   estoque:  {title:'Gestao de Estoques', badge:'Lotes',    icon:'ti-package'},
   processo:   {title:'Ordens de Processo',  badge:'Producao',   icon:'ti-settings-2'},
   analises:   {title:'Analises',            badge:'Dashboard',  icon:'ti-chart-bar'},
-  relatorios: {title:'Relatorios',          badge:'Exportar',   icon:'ti-file-text'}
+  relatorios:   {title:'Relatorios',          badge:'Exportar',   icon:'ti-file-text'},
+  faturamento:  {title:'Faturamento',         badge:'NF Saida',   icon:'ti-receipt'},
+  financeiro:   {title:'Financeiro',          badge:'Gestao',     icon:'ti-coin'}
 };
 function navTo(mod) {
-  ['compras','estoque','processo','analises','relatorios'].forEach(function(m) {
+  ['compras','estoque','processo','analises','relatorios','faturamento','financeiro'].forEach(function(m) {
     var p=document.getElementById('panel-'+m);
     var n=document.getElementById('nl-'+m);
     if(p) p.classList.toggle('on', m===mod);
@@ -1002,7 +1388,9 @@ function navTo(mod) {
   if(mod==='compras')    { renderCompras(); updStatsC(); }
   if(mod==='processo')   { fillPEst(); }
   if(mod==='analises')   { renderAnalises(); }
-  if(mod==='relatorios') { /* static */ }
+  if(mod==='relatorios')  { /* static */ }
+  if(mod==='faturamento') { renderFaturamento(); fillFatOP(); updStatsFat(); }
+  if(mod==='financeiro')  { /* awaiting config */ }
 }
 
 // - modal / drawer -
@@ -1264,27 +1652,41 @@ function registrarManual() {
   var qtd  = parseFloat(gv('cm-qtd'));
   if(!forn||!prod||!qtd){ alert('Preencha fornecedor, produto e quantidade.'); return; }
   var ocId  = 'OC-' + pad(ocN++, 4);
-  var estId = 'EST-' + pad(estN++, 3);
+  var destEst = gv('cm-est-dest');
   var preco = parseFloat(gv('cm-preco'))||0;
-  ESTS.push({
-    id:estId, nome:estId, insumo:prod,
-    tipo: gv('cm-tipo'), ocId: ocId+' / NF-'+gv('cm-nf'),
-    qtdI:qtd, saldo:qtd,
-    lote:gv('cm-lote')||'-', forn:forn, almo:gv('cm-almo'),
-    status:'Disponivel',
-    hist:[{tipo:'Entrada',qtd:qtd,desc:'Entrada manual NF-'+gv('cm-nf'),data:hoje(),saldoAp:qtd}]
-  });
+  var estId;
+  if (destEst === 'novo' || !destEst) {
+    estId = 'EST-' + pad(estN++, 3);
+    ESTS.push({
+      id:estId, nome:estId, insumo:prod,
+      tipo:gv('cm-tipo')||'Manual', ocId: ocId+' / NF-'+gv('cm-nf'),
+      qtdI:qtd, saldo:qtd,
+      lote:gv('cm-lote')||'-', forn:forn, almo:gv('cm-almo')||'-',
+      status:'Disponivel',
+      hist:[{tipo:'Entrada',qtd:qtd,desc:'Entrada manual NF-'+gv('cm-nf'),data:hoje(),saldoAp:qtd}]
+    });
+  } else {
+    estId = destEst;
+    var est = ESTS.find(function(x){ return x.id===destEst; });
+    if (est) {
+      est.saldo += qtd; est.qtdI += qtd;
+      est.hist.push({tipo:'Entrada',qtd:qtd,desc:'Entrada manual adicionada',data:hoje(),saldoAp:est.saldo});
+      sbFetch('PATCH','estoques', estToDB(est), 'id=eq.'+estId).catch(function(e){ console.error(e); });
+    }
+  }
   OCS.push({
-    id:ocId, nf:gv('cm-nf'), forn:forn, itens:[{xProd:prod,qCom:qtd,vUnCom:preco,uCom:'KG',vProd:qtd*preco,cProd:'',NCM:''}],
+    id:ocId, nf:gv('cm-nf'), forn:forn,
+    itens:[{xProd:prod,qCom:qtd,vUnCom:preco,uCom:'KG',vProd:qtd*preco,cProd:'',NCM:''}],
     qtdTotal:qtd, vTotal:qtd*preco, data:gv('cm-data'),
-    lote:gv('cm-lote'), almo:gv('cm-almo'), obs:'', estId:estId, status:'Recebido'
+    lote:gv('cm-lote'), almo:gv('cm-almo')||'-', obs:'', estId:estId,
+    status:'Recebido', tipoLanc:'Manual'
   });
   var mOC  = OCS[OCS.length-1];
   var mEst = ESTS.find(function(x){ return x.id===estId; });
   sbFetch('POST','compras',  ocToDB(mOC)).catch(function(e){ console.error(e); });
   if (mEst) sbFetch('POST','estoques', estToDB(mEst)).catch(function(e){ console.error(e); });
   showToast('Registrado: '+ocId, 'ok');
-  ['cm-forn','cm-prod','cm-nf','cm-qtd','cm-preco','cm-lote'].forEach(function(id){ sv(id,''); });
+  ['cm-forn','cm-tipo','cm-prod','cm-nf','cm-qtd','cm-preco','cm-lote','cm-almo','cm-obs'].forEach(function(id){ sv(id,''); });
   toggleManual();
   renderCompras(); updStatsC(); fillPEst();
 }
@@ -1464,13 +1866,6 @@ function preRes() {
   // -- Step 3: Processo --
   setText('r-extrusora', gv('pr-extrusora') || '-');
   setText('r-turno',     gv('pr-turno')     || '-');
-  setText('r-operador',  gv('pr-operador')  || '-');
-  var vel = gv('pr-velocidade');
-  setText('r-velocidade', vel ? vel+' m/min' : '-');
-  var esp = gv('pr-espessura');
-  setText('r-espessura', esp ? esp+' um' : '-');
-  var larg = gv('pr-largura');
-  setText('r-largura', larg ? larg+' mm' : '-');
 
   // Format datetime
   function fmtDT(val) {
@@ -1623,10 +2018,10 @@ function confirmar() {
     insumo:    e.insumo,
     extrusora: gv('pr-extrusora'),
     turno:     gv('pr-turno'),
-    operador:  gv('pr-operador'),
-    velocidade:gv('pr-velocidade'),
-    espessura: gv('pr-espessura'),
-    largura:   gv('pr-largura'),
+    operador:  '',
+    velocidade:'',
+    espessura: '',
+    largura:   '',
     inicio:    gv('pr-inicio'),
     fim:       gv('pr-fim'),
     acabado:   ac,
@@ -1646,8 +2041,7 @@ function confirmar() {
   sv('p-est','');
   var ibox = document.getElementById('p-ibox'); if(ibox) ibox.style.display='none';
   var compList = document.getElementById('comp-list'); if(compList) compList.innerHTML='';
-  sv('pr-extrusora',''); sv('pr-turno',''); sv('pr-operador','');
-  sv('pr-velocidade',''); sv('pr-espessura',''); sv('pr-largura','');
+  sv('pr-extrusora',''); sv('pr-turno','');
   sv('pr-inicio',''); sv('pr-fim','');
   sv('r-ac','0'); sv('r-ap','0'); sv('r-bo','0');
   var totEl = document.getElementById('tot-pct'); if(totEl) totEl.textContent='0 kg';
@@ -2231,7 +2625,67 @@ function imprimirRelatorio() {
   win.document.close();
   win.print();
 }
+function imprimirRelatorio() {
+  var corpo = document.getElementById('rel-conteudo');
+  if (!corpo) return;
+  var win = window.open('', '_blank');
+  if (!win) { alert('Permita popups para imprimir.'); return; }
+  var css = 'body{font-family:sans-serif;padding:24px;color:#1a2a1a}';
+  css += 'table{width:100%;border-collapse:collapse;font-size:12px}';
+  css += 'th{background:#f5faf5;padding:7px 10px;border-bottom:2px solid #ccc;text-align:left;font-size:10px;text-transform:uppercase;color:#777}';
+  css += 'td{padding:7px 10px;border-bottom:1px solid #eee}';
+  css += '.fw6{font-weight:600}';
+  var tituloEl = document.getElementById('rel-titulo');
+  var nomeTit  = tituloEl ? tituloEl.textContent.trim() : 'Relatorio';
+  var dataHoje = hoje();
+  win.document.open();
+  win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>');
+  win.document.write(nomeTit);
+  win.document.write('\x3c/title><style>');
+  win.document.write(css);
+  win.document.write('\x3c/style>\x3c/head><body>');
+  win.document.write('<h2>');
+  win.document.write(nomeTit);
+  win.document.write('\x3c/h2><p style="color:#888;font-size:12px;margin-bottom:16px">Gerado em ');
+  win.document.write(dataHoje);
+  win.document.write('\x3c/p>');
+  win.document.write(corpo.innerHTML);
+  win.document.write('\x3c/body>\x3c/html>');
+  win.document.close();
+  win.print();
+}
 
+// -- faturamento OP linking --
+function fillFatOP() {
+  ['fat-op','fm-op'].forEach(function(selId) {
+    var sel = document.getElementById(selId);
+    if (!sel) return;
+    var cur = sel.value;
+    sel.innerHTML = '<option value="">-- Nao vincular --\x3c/option>';
+    PROCESSOS.forEach(function(p) {
+      var opt = document.createElement('option');
+      opt.value = p.op;
+      opt.textContent = p.op + ' - ' + p.produto + ' (' + fmtN(p.acabado) + ' kg | ' + p.data + ')';
+      sel.appendChild(opt);
+    });
+    if (cur) sel.value = cur;
+  });
+}
+
+function onSelFatOP(prefix) {
+  var op   = gv(prefix+'-op');
+  var wrap = document.getElementById(prefix+'-op-info-wrap');
+  var info = document.getElementById(prefix+'-op-info');
+  if (!op) { if (wrap) wrap.style.display='none'; return; }
+  var proc = PROCESSOS.find(function(p){ return p.op===op; });
+  if (proc && info) {
+    info.value = proc.produto+' | '+fmtN(proc.acabado)+' kg | Estoque: '+proc.estId+' | '+proc.data;
+    if (wrap) wrap.style.display = 'block';
+  }
+}
+
+// -- init --
+carregarDados();
 </script>
 
 <!-- MODAL EDITAR ESTOQUE -->
